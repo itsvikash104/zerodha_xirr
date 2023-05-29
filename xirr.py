@@ -1,22 +1,16 @@
 import datetime
-import argparse
 
 import pyxirr
 from colorama import Fore, Back, Style
 import pandas as pd
 
-from report import trades_for_past
-
-parser = argparse.ArgumentParser()
-parser.add_argument("current_val", help="current value of the portfolio in Rs", type=float)
+from report import trades_for_past, get_equity_balance
 
 
 def main():
-    args = parser.parse_args()
-    current_val = args.current_val
+    current_val = get_equity_balance()
     
     trades = trades_for_past(days=5 * 365)
-    # trades = read_json_file("./trades.json")
     trades_df = pd.DataFrame(trades).sort_values(by="trade_date")
     trades_df.reset_index(drop=True, inplace=True)
 
@@ -26,8 +20,6 @@ def main():
     def iter_trades():
         for i in range(len(trades_df)):
             date = datetime.datetime.fromisoformat(trades_df["order_execution_time"][i])
-            # print(date)
-            # date = trades_df["trade_date"][i]
             amount = (
                 (-1 if trades_df["trade_type"][i] == "buy" else 1)
                 * trades_df["price"][i]
@@ -41,6 +33,7 @@ def main():
     dates.append(datetime.datetime.now())
     amounts.append(current_val)
 
+    print("Current Equity Balance: Rs {}".format(current_val))
     print(
         Back.RED + Style.BRIGHT,
         "XIRR: ",
@@ -48,6 +41,7 @@ def main():
         "%",
         Style.RESET_ALL,
     )
+    
 
 
 if __name__ == "__main__":

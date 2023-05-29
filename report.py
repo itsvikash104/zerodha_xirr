@@ -78,3 +78,19 @@ def trades_for_past(days, step_size_days=365):
         days = days - step_size_days
 
     return all_trades
+
+
+def get_equity_balance():
+    dashboard_url = f"{ENDPOINT}/api/dashboard"
+    cookies = get_cookie("./console.cookie")
+    headers = {
+        'x-csrftoken': read_file_as_string("./console.x-csrftoken")
+    }
+    response = requests.get(dashboard_url, cookies=cookies, headers=headers)
+    if response.status_code != 200:
+        raise Exception("Failed to get current equity balance")
+    response = response.json()
+    if response['status'] != 'success':
+        raise Exception("Failed to get current equity balance")
+    return response['data']['result']['eq_holdings_value']
+    
