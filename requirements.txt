@@ -1,0 +1,4 @@
+colorama
+pandas
+pyxirr
+requests
