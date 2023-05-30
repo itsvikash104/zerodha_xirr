@@ -17,5 +17,5 @@ vim console.cookie
 vim console.x-csrftoken
 # put the x-csrftoken from logged in console session on browser and save
 pip install -r requirements.txt
-python xirr.py {potfolio-current-value}
+python xirr.py
 ```
